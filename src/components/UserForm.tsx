@@ -55,7 +55,7 @@ const UserForm = forwardRef<FormInstance, UserFormProps>(({ children, ...props }
 
 
     return (
-        <Form form={form} {...props} layout="vertical">
+        <Form {...props} form={form} layout="vertical">
             {formFields(form).map(({ label, name, rules, component }) => (
                 <Form.Item key={name} label={label} name={name} rules={rules}>
                     {component}

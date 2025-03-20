@@ -1,35 +1,35 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import UserForm from '../../components/UserForm';
-import { Button, FormInstance } from 'antd';
+import { Button, FormInstance, Modal } from 'antd';
+import useModal from '../../app/hooks/useModal';
 
 
 const ModalAndFormPage: React.FC = () => {
 
-  const formRef = useRef<FormInstance>(null);
+  const { isModalOpen, openModal, closeModal, handleOk, formRef } = useModal()
 
   useEffect(() => {
-    formRef.current && formRef.current.setFieldsValue({
-      name: '小明',
-      age: 20,
-      interest: ['eat', 'drink'],
-    });
-
-  }, []);
-
-  const handleSubmit = async () => {
-    try {
-      const values = await formRef.current?.validateFields();
-      console.log('表單資料:', values);
-    } catch (error) {
-      console.error('驗證失敗:', error);
+    if (isModalOpen) {
+      formRef.current && formRef.current.setFieldsValue({
+        name: '小明',
+        age: 20,
+        interest: ['eat', 'drink'],
+      });
     }
-  };
+  }, [isModalOpen]);
 
   return (
     <div>
-      <UserForm ref={formRef} />
-      <Button onClick={handleSubmit} type="primary" style={{ marginTop: 16 }}>
-        提交
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={closeModal}
+      >
+        <UserForm ref={formRef} />
+      </Modal>
+
+      <Button onClick={openModal} type="primary" style={{ marginTop: 16 }}>
+        開啟
       </Button>
     </div>
   );
