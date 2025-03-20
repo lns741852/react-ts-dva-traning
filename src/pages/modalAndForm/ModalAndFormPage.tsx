@@ -1,79 +1,36 @@
-import { useRef, useState } from 'react';
-import ModalForm, { FormField } from '../../components/ModalForm';
-import { FormInstance, Input, InputNumber, Select } from 'antd';
+import { useEffect, useRef } from 'react';
+import UserForm from '../../components/UserForm';
+import { Button, FormInstance } from 'antd';
 
 
-export interface FormItem {
-  name: string;
-  age: number;
-  interest: string[];
-}
+const ModalAndFormPage: React.FC = () => {
 
-const ModalAndFormPage = () => {
-  const { Option } = Select;
+  const formRef = useRef<FormInstance>(null);
 
-  const modalFormRef = useRef<any>(null);
-  
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  useEffect(() => {
+    formRef.current && formRef.current.setFieldsValue({
+      name: '小明',
+      age: 20,
+      interest: ['eat', 'drink'],
+    });
 
+  }, []);
 
-  const handleOpenModal = () => setIsModalVisible(true);
-
-  const handleCancelModal = () => setIsModalVisible(false);
-
-  const handleFormSubmit = (values: FormItem) => {
-    console.log('Form submitted with values:', values);
-    setIsModalVisible(false);
-  };
-
-  const customValidator = async (_: any, value: any) => {
-    let hasEat = modalFormRef.current.getFieldValue(['interest']).includes('eat')
-    if (value < 18 && hasEat) {
-      throw new Error('Eat that Age must be at least 18 years old');
+  const handleSubmit = async () => {
+    try {
+      const values = await formRef.current?.validateFields();
+      console.log('表單資料:', values);
+    } catch (error) {
+      console.error('驗證失敗:', error);
     }
   };
 
-  const formFields: FormField[] = [
-    {
-      label: '姓名',
-      name: 'name',
-      rules: [{ required: true, message: '請輸入姓名' }],
-      component: <Input />
-    },
-    {
-      label: '年齡',
-      name: 'age',
-      rules: [
-        { required: true, message: 'Please input your age!' },
-        { validator: customValidator }
-      ],
-      component: <InputNumber />
-    },
-    {
-      label: '興趣',
-      name: 'interest',
-      rules: [{ required: true, message: '請輸入您的興趣' }],
-      component:
-        <Select mode="multiple" style={{ width: '100%' }}>
-          <Option value="eat">吃</Option>
-          <Option value="drink">喝</Option>
-          <Option value="play">玩</Option>
-        </Select>
-    },
-  ];
-
   return (
     <div>
-      <ModalForm
-        title="ModalAndFormPage"
-        open={isModalVisible}
-        onCancel={handleCancelModal}
-        formFields={formFields}
-        onFinish={handleFormSubmit}
-        ref={modalFormRef}
-        name="ModalAndFormPage"
-      />
-      <button onClick={handleOpenModal}>打開 Modal</button>
+      <UserForm ref={formRef} />
+      <Button onClick={handleSubmit} type="primary" style={{ marginTop: 16 }}>
+        提交
+      </Button>
     </div>
   );
 };

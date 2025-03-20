@@ -1,4 +1,4 @@
-import { Modal, Form, Button, FormInstance, FormProps, ModalProps } from 'antd';
+import { Modal, Form, Button, FormInstance, FormProps, ModalProps } from 'antd'
 import { ForwardRefRenderFunction, forwardRef, useRef } from 'react';
 
 // 函數宣告
@@ -18,7 +18,7 @@ type  ModalAndFormProps = FormProps<any> & ModalProps
 //輸入內容
 interface ModalFormProps extends Omit<ModalAndFormProps, 'form'>{
   formFields: FormField[];
-  onFinish: onFinish;
+onFinish: onFinish;
 }
 
 
