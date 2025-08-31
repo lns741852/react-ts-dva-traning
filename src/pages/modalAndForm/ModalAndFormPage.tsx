@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import UserForm from '../../components/UserForm';
+import SelfForm from '../../components/SelfForm';
 import { Button, FormInstance, Modal } from 'antd';
 import useModal from '../../app/hooks/useModal';
+import { userFields } './formFields';
 
 
 const ModalAndFormPage: React.FC = () => {
@@ -25,7 +26,7 @@ const ModalAndFormPage: React.FC = () => {
         onOk={handleOk}
         onCancel={closeModal}
       >
-        <UserForm ref={formRef} />
+        <SelfForm ref={formRef} fields={userFields()}/>
       </Modal>
 
       <Button onClick={openModal} type="primary" style={{ marginTop: 16 }}>
