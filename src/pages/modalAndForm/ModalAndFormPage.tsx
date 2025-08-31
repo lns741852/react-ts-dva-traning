@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import UserForm from '../../components/UserForm';
 import { Button, FormInstance, Modal } from 'antd';
-import useModal from '../../app/hooks/useModal';
+import useModal from '../hooks/useModal';
+import SelfForm from '../components/SelfForm';
 
 
 const ModalAndFormPage: React.FC = () => {
 
-  const { isModalOpen, openModal, closeModal, handleOk, formRef } = useModal()
+  const { isModalOpen, openModal, closeModal, handleOk } = useModal()
+  const formRef = useRef<FormInstance | null>(null);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -18,14 +20,18 @@ const ModalAndFormPage: React.FC = () => {
     }
   }, [isModalOpen]);
 
+  const doAction = async () => {
+    const values = await formRef.current?.getFieldValue();
+  }
+
   return (
     <div>
       <Modal
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={() => handleOk(doAction)}
         onCancel={closeModal}
       >
-        <UserForm ref={formRef} />
+        <SelfForm ref={formRef}  fields ={userFields(formRef.current)}/>
       </Modal>
 
       <Button onClick={openModal} type="primary" style={{ marginTop: 16 }}>
