@@ -10,10 +10,13 @@ const useModal = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleOk = async () => {
+  const handleOk = async (doAction?:()=>Promise<void> | void) => {
     try {
       const values = await formRef.current?.validateFields();
       console.log("表單資料:", values);
+
+      doAction && (await doAction());
+      
       closeModal();
     } catch (error) {
       console.error("驗證失敗:", error);
